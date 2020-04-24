@@ -1,17 +1,25 @@
 def		column_info(column):
 	count, mean, min = len(column), 0, float('inf')
 	for nb in column:
-		mean += nb
-		if nb < min:
-			min = nb
-	mean /= count
+		# print(type(mean), "nb=",nb)
+		try :
+			mean += float(nb)
+			if float(nb) < min:
+				min = float(nb)
+		except ValueError :
+			mean = mean
+			count -= 1
+	mean /= float(count)
 	std, max = 0, float('-inf')
 	for nb in column:
-		std += abs(mean - nb)
-		if nb > max:
-			max = nb
+		try :
+			std += abs(float(mean) - float(nb))
+			if float(nb) > max:
+				max = float(nb)
+		except ValueError:
+			max, std = max, std
 	std /= count
-	return (count, mean, std, min, (min + mean) / 2, mean, (mean + max) / 2, max)
+	return ([count, mean, std, min, (min + mean) / 2, mean, (mean + max) / 2, max])
 
 # info = column_info({1, 2, 3, 4})
 # print("count: ", info[0])
