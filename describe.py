@@ -6,7 +6,10 @@ import pandas as pd
 import argparse
 
 def args_is_r(df, args, all=True):
-    row = ''.join(args.row.split()).split(',')
+    row = []
+    arg = args.row.split(',')
+    for r in arg :
+        row.append(r.strip())
 
     if (all == True):
         try :
