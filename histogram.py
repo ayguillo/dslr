@@ -3,6 +3,7 @@
 import sys
 import csv
 from column_info import column_info
+import matplotlib.pyplot as plt
 
 def get_houses_dataset(file):
 	f = open(file,"r")
@@ -69,35 +70,59 @@ def		homogene(datasets, lesson):
 			break
 		lesson_row += 1
 	global_info = column_info(datasets["Hogwarts House"][lesson_row])
-	G_quart = quart_diff(global_info, datasets["Gryffindor"][lesson_row])
+	quarts = []
+	quarts.append(quart_diff(global_info, datasets["Gryffindor"][lesson_row]))
 	# print(G_quart)
-	S_quart = quart_diff(global_info, datasets["Slytherin"][lesson_row])
-	H_quart = quart_diff(global_info, datasets["Hufflepuff"][lesson_row])
-	R_quart = quart_diff(global_info, datasets["Ravenclaw"][lesson_row])
-	mean_quart = [(G_quart[0] + S_quart[0] + H_quart[0] + R_quart[0]) / 4,
-				(G_quart[1] + S_quart[1] + H_quart[1] + R_quart[1]) / 4,
-				(G_quart[2] + S_quart[2] + H_quart[2] + R_quart[2]) / 4,
-				(G_quart[3] + S_quart[3] + H_quart[3] + R_quart[3]) / 4]
-	diff =  abs(G_quart[0] - mean_quart[0]) + abs(S_quart[0] - mean_quart[0]) + abs(H_quart[0] - mean_quart[0]) + abs(R_quart[0] - mean_quart[0])
-	diff += abs(G_quart[1] - mean_quart[1]) + abs(S_quart[1] - mean_quart[1]) + abs(H_quart[1] - mean_quart[1]) + abs(R_quart[1] - mean_quart[1])
-	diff += abs(G_quart[2] - mean_quart[2]) + abs(S_quart[2] - mean_quart[2]) + abs(H_quart[2] - mean_quart[2]) + abs(R_quart[2] - mean_quart[2])
-	diff += abs(G_quart[3] - mean_quart[3]) + abs(S_quart[3] - mean_quart[3]) + abs(H_quart[3] - mean_quart[3]) + abs(R_quart[3] - mean_quart[3])
-	return (diff / 16)
+	quarts.append(quart_diff(global_info, datasets["Slytherin"][lesson_row]))
+	quarts.append(quart_diff(global_info, datasets["Hufflepuff"][lesson_row]))
+	quarts.append(quart_diff(global_info, datasets["Ravenclaw"][lesson_row]))
+	mean_quart = [(quarts[0][0] + quarts[1][0] + quarts[2][0] + quarts[3][0]) / 4,
+				(quarts[0][1] + quarts[1][1] + quarts[2][1] + quarts[3][1]) / 4,
+				(quarts[0][2] + quarts[1][2] + quarts[2][2] + quarts[3][2]) / 4,
+				(quarts[0][3] + quarts[1][3] + quarts[2][3] + quarts[3][3]) / 4]
+	diff =  abs(quarts[0][0] - mean_quart[0]) + abs(quarts[1][0] - mean_quart[0]) + abs(quarts[2][0] - mean_quart[0]) + abs(quarts[3][0] - mean_quart[0])
+	diff += abs(quarts[0][1] - mean_quart[1]) + abs(quarts[1][1] - mean_quart[1]) + abs(quarts[2][1] - mean_quart[1]) + abs(quarts[3][1] - mean_quart[1])
+	diff += abs(quarts[0][2] - mean_quart[2]) + abs(quarts[1][2] - mean_quart[2]) + abs(quarts[2][2] - mean_quart[2]) + abs(quarts[3][2] - mean_quart[2])
+	diff += abs(quarts[0][3] - mean_quart[3]) + abs(quarts[1][3] - mean_quart[3]) + abs(quarts[2][3] - mean_quart[3]) + abs(quarts[3][3] - mean_quart[3])
+	return (diff / 16, quarts)
 
 data = get_houses_dataset(sys.argv[1])
-print("Arithmancy                   :", homogene(data, "Arithmancy"))
-print("Astronomy                    :", homogene(data, "Astronomy"))
-print("Herbology                    :", homogene(data, "Herbology"))
-print("Defense Against the Dark Arts:", homogene(data, "Defense Against the Dark Arts"))
-print("Divination                   :", homogene(data, "Divination"))
-print("Muggle Studies               :", homogene(data, "Muggle Studies"))
-print("Ancient Runes                :", homogene(data, "Ancient Runes"))
-print("History of Magic             :", homogene(data, "History of Magic"))
-print("Transfiguration              :", homogene(data, "Transfiguration"))
-print("Potions                      :", homogene(data, "Potions"))
-print("Care of Magical Creatures    :", homogene(data, "Care of Magical Creatures"))
-print("Charms                       :", homogene(data, "Charms"))
-print("Flying                       :", homogene(data, "Flying"))
+# print("Arithmancy                   :", homogene(data, "Arithmancy"))
+# print("Astronomy                    :", homogene(data, "Astronomy"))
+# print("Herbology                    :", homogene(data, "Herbology"))
+# print("Defense Against the Dark Arts:", homogene(data, "Defense Against the Dark Arts"))
+# print("Divination                   :", homogene(data, "Divination"))
+# print("Muggle Studies               :", homogene(data, "Muggle Studies"))
+# print("Ancient Runes                :", homogene(data, "Ancient Runes"))
+# print("History of Magic             :", homogene(data, "History of Magic"))
+# print("Transfiguration              :", homogene(data, "Transfiguration"))
+# print("Potions                      :", homogene(data, "Potions"))
+# print("Care of Magical Creatures    :", homogene(data, "Care of Magical Creatures"))
+# print("Charms                       :", homogene(data, "Charms"))
+# print("Flying                       :", homogene(data, "Flying"))
+
+
+
+res, quarts = homogene(data, "Arithmancy")
+n_bins = 4
+import numpy as np
+x = [[1, 1, 1, 1], [2, 2, 2, 2], [3, 3, 3, 3], [4, 4, 4, 4]]
+
+fig, ax0 = plt.subplots(nrows=1, ncols=1)
+# ax0, ax1, ax2, ax3 = axes.flatten()
+
+colors = ['red', 'green', 'yellow', 'blue']
+houses = ['Gryffindor', 'Slytherin', 'Hufflepuff', 'Ravenclaw']
+ax0.hist(x, n_bins, density=True, histtype='bar', color=colors, label=houses)
+ax0.legend(prop={'size': 10})
+ax0.set_title('lesson')
+
+fig.tight_layout()
+plt.show()
+
+
+# n, bins, patches = plt.hist([1, 2, 3, 4], [7, 8, 9], facecolor='red', alpha=0.5)
+# plt.show()
 # print(data["Hogwarts House"])
 
 # histogram(data)
