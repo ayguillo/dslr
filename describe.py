@@ -31,9 +31,8 @@ def describe(data):
     # print(tab_feature)
     
 
-
 def get_dataset(file):
-    f = open(file,"r")
+    f = open(file, "r")
     csv_reader = csv.reader(f, delimiter=',')
     count_line = 0
     dataset = []
@@ -60,3 +59,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+    print(get_dataset(sys.argv[1]))
