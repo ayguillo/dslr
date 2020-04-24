@@ -104,20 +104,57 @@ data = get_houses_dataset(sys.argv[1])
 
 
 res, quarts = homogene(data, "Arithmancy")
-n_bins = 4
+# n_bins = 4
 import numpy as np
-x = [[1, 1, 1, 1], [2, 2, 2, 2], [3, 3, 3, 3], [4, 4, 4, 4]]
+x = [[1, 4, 5, 2], [2, 8, 7, 3], [1, 4, 2, 6], [6, 1, 7, 3]]
 
-fig, ax0 = plt.subplots(nrows=1, ncols=1)
+# fig, ax0 = plt.subplots(nrows=1, ncols=1)
 # ax0, ax1, ax2, ax3 = axes.flatten()
 
-colors = ['red', 'green', 'yellow', 'blue']
-houses = ['Gryffindor', 'Slytherin', 'Hufflepuff', 'Ravenclaw']
-ax0.hist(x, n_bins, density=True, histtype='bar', color=colors, label=houses)
-ax0.legend(prop={'size': 10})
-ax0.set_title('lesson')
+# colors = ['red', 'green', 'yellow', 'blue']
+# houses = ['Gryffindor', 'Slytherin', 'Hufflepuff', 'Ravenclaw']
+# data to plot
 
-fig.tight_layout()
+
+n_groups = 4
+means_G = quarts[0]
+means_S = quarts[1]
+means_H = quarts[2]
+means_R = quarts[3]
+
+# create plot
+fig, ax = plt.subplots()
+index = np.arange(n_groups)
+bar_width = 0.20
+opacity = 0.8
+
+rects1 = plt.bar(index - bar_width / 2, means_G, bar_width,
+alpha=opacity,
+color='r',
+label='Gryffyndor')
+
+rects2 = plt.bar(index + bar_width - bar_width / 2, means_S, bar_width,
+alpha=opacity,
+color='g',
+label='Slytherin')
+
+rects3 = plt.bar(index + bar_width * 2 - bar_width / 2, means_H, bar_width,
+alpha=opacity,
+color='y',
+label='Larves')
+
+rects4 = plt.bar(index + bar_width * 3 - bar_width / 2, means_R, bar_width,
+alpha=opacity,
+color='b',
+label='Ravenclaw')
+
+plt.xlabel('notes (%)')
+plt.ylabel('student number (%)')
+plt.title('poudlard')
+plt.xticks(index + bar_width, ('0-25', '25-50', '50-75', '75-100'))
+plt.legend()
+
+plt.tight_layout()
 plt.show()
 
 
