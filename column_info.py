@@ -1,7 +1,3 @@
-# count, mean, std, min, max, percentage
-
-import sys
-
 def		column_info(column):
 	count, mean, min = len(column), 0, float('inf')
 	for nb in column:
