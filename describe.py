@@ -61,7 +61,7 @@ def describe(data, args):
     print(df)
 
 def get_dataset(file):
-    f = open(file,"r")
+    f = open(file, "r")
     csv_reader = csv.reader(f, delimiter=',')
     count_line = 0
     dataset = []
