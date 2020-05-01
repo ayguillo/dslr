@@ -5,6 +5,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 import argparse
 
+def		multiply_100(tab):
+	for i in range (len(tab)):
+		tab[i] *= 100
+	return tab
+
 def		get_houses_dataset(file):
 	f = open(file,"r")
 	csv_reader = csv.reader(f, delimiter=',')
@@ -61,7 +66,7 @@ def		quart_diff(general_info, house_notes):
 	quarts[3] /= count
 	return quarts
 
-def		homogene(datasets, lesson):
+def		difference(datasets, lesson):
 	lesson_row = 0
 	for row in datasets["Hogwarts House"]:
 		# print(row[0])
@@ -86,13 +91,13 @@ def		homogene(datasets, lesson):
 	return (diff / 16, quarts)
 
 def		lesson_graph(dataset, lesson):
-	res, quarts = homogene(dataset, lesson)
+	res, quarts = difference(dataset, lesson)
 
 	n_groups = 4
-	means_G = quarts[0]
-	means_S = quarts[1]
-	means_H = quarts[2]
-	means_R = quarts[3]
+	means_G = multiply_100(quarts[0])
+	means_S = multiply_100(quarts[1])
+	means_H = multiply_100(quarts[2])
+	means_R = multiply_100(quarts[3])
 
 	# create plot
 	fig, ax = plt.subplots()
@@ -134,15 +139,15 @@ def		histogram_graph(dataset):
 	"Divination":0, "Muggle Studies":0, "Ancient Runes":0, "History of Magic":0, "Transfiguration":0,
 	"Potions":0, "Care of Magical Creatures":0, "Charms":0, "Flying":0}
 	for lesson in lessons.keys():
-		score, quarts = homogene(dataset, lesson)
+		score, quarts = difference(dataset, lesson)
 		lessons[lesson] = score
 	lessons_graph, scores_graph = [], []
 	for k, v in sorted(lessons.items(), key=lambda x: x[1]):
 		lessons_graph += [k.replace(' ', '\n')]
 		scores_graph += [v]
 
-	fig = plt.figure()
-	plt.bar(lessons_graph, scores_graph)
+	fig = plt.figure(figsize = (13, 7))
+	plt.bar(lessons_graph, multiply_100(scores_graph))
 
 	plt.tight_layout()
 	plt.show()
@@ -161,7 +166,7 @@ def		main():
 			if args.lesson.lower() == lesson.lower():
 				lesson_graph(data, lesson)
 				return
-		print("Unknow lesson name")
+		print("Unknow lesson name. try with these:\n\n" + "\n".join(lessons))
 	else:
 		histogram_graph(data)
 
