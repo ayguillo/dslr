@@ -1,11 +1,11 @@
-# import get_dataset from describe.py
-
 import sys
 import csv
 from column_info import column_info
 import matplotlib.pyplot as plt
+import numpy as np
+import argparse
 
-def get_houses_dataset(file):
+def		get_houses_dataset(file):
 	f = open(file,"r")
 	csv_reader = csv.reader(f, delimiter=',')
 	count_line = 0
@@ -15,7 +15,6 @@ def get_houses_dataset(file):
 		if (count_line == 0):
 			len_data  = len(line)
 			for row_index in range (0, len(line)):
-				# print(line[row_index])
 				if (line[row_index] == "Hogwarts House"):
 					house_row = row_index
 					break
@@ -86,80 +85,85 @@ def		homogene(datasets, lesson):
 	diff += abs(quarts[0][3] - mean_quart[3]) + abs(quarts[1][3] - mean_quart[3]) + abs(quarts[2][3] - mean_quart[3]) + abs(quarts[3][3] - mean_quart[3])
 	return (diff / 16, quarts)
 
-data = get_houses_dataset(sys.argv[1])
-# print("Arithmancy                   :", homogene(data, "Arithmancy"))
-# print("Astronomy                    :", homogene(data, "Astronomy"))
-# print("Herbology                    :", homogene(data, "Herbology"))
-# print("Defense Against the Dark Arts:", homogene(data, "Defense Against the Dark Arts"))
-# print("Divination                   :", homogene(data, "Divination"))
-# print("Muggle Studies               :", homogene(data, "Muggle Studies"))
-# print("Ancient Runes                :", homogene(data, "Ancient Runes"))
-# print("History of Magic             :", homogene(data, "History of Magic"))
-# print("Transfiguration              :", homogene(data, "Transfiguration"))
-# print("Potions                      :", homogene(data, "Potions"))
-# print("Care of Magical Creatures    :", homogene(data, "Care of Magical Creatures"))
-# print("Charms                       :", homogene(data, "Charms"))
-# print("Flying                       :", homogene(data, "Flying"))
+def		lesson_graph(dataset, lesson):
+	res, quarts = homogene(dataset, lesson)
 
+	n_groups = 4
+	means_G = quarts[0]
+	means_S = quarts[1]
+	means_H = quarts[2]
+	means_R = quarts[3]
 
+	# create plot
+	fig, ax = plt.subplots()
+	index = np.arange(n_groups)
+	bar_width = 0.20
+	opacity = 0.8
 
-res, quarts = homogene(data, "Arithmancy")
-# n_bins = 4
-import numpy as np
-x = [[1, 4, 5, 2], [2, 8, 7, 3], [1, 4, 2, 6], [6, 1, 7, 3]]
+	rects1 = plt.bar(index - bar_width / 2, means_G, bar_width,
+	alpha=opacity,
+	color='r',
+	label='Gryffyndor')
 
-# fig, ax0 = plt.subplots(nrows=1, ncols=1)
-# ax0, ax1, ax2, ax3 = axes.flatten()
+	rects2 = plt.bar(index + bar_width - bar_width / 2, means_S, bar_width,
+	alpha=opacity,
+	color='g',
+	label='Slytherin')
 
-# colors = ['red', 'green', 'yellow', 'blue']
-# houses = ['Gryffindor', 'Slytherin', 'Hufflepuff', 'Ravenclaw']
-# data to plot
+	rects3 = plt.bar(index + bar_width * 2 - bar_width / 2, means_H, bar_width,
+	alpha=opacity,
+	color='y',
+	label='Larves')
 
+	rects4 = plt.bar(index + bar_width * 3 - bar_width / 2, means_R, bar_width,
+	alpha=opacity,
+	color='b',
+	label='Ravenclaw')
 
-n_groups = 4
-means_G = quarts[0]
-means_S = quarts[1]
-means_H = quarts[2]
-means_R = quarts[3]
+	plt.xlabel('notes (%)')
+	plt.ylabel('student number (%)')
+	plt.title(lesson)
+	plt.xticks(index + bar_width, ('0-25', '25-50', '50-75', '75-100'))
+	plt.legend()
 
-# create plot
-fig, ax = plt.subplots()
-index = np.arange(n_groups)
-bar_width = 0.20
-opacity = 0.8
+	plt.tight_layout()
+	plt.show()
 
-rects1 = plt.bar(index - bar_width / 2, means_G, bar_width,
-alpha=opacity,
-color='r',
-label='Gryffyndor')
+def		histogram_graph(dataset):
+	lessons = {"Arithmancy":0, "Astronomy":0, "Herbology":0, "Defense Against the Dark Arts":0,
+	"Divination":0, "Muggle Studies":0, "Ancient Runes":0, "History of Magic":0, "Transfiguration":0,
+	"Potions":0, "Care of Magical Creatures":0, "Charms":0, "Flying":0}
+	for lesson in lessons.keys():
+		score, quarts = homogene(dataset, lesson)
+		lessons[lesson] = score
+	lessons_graph, scores_graph = [], []
+	for k, v in sorted(lessons.items(), key=lambda x: x[1]):
+		lessons_graph += [k.replace(' ', '\n')]
+		scores_graph += [v]
 
-rects2 = plt.bar(index + bar_width - bar_width / 2, means_S, bar_width,
-alpha=opacity,
-color='g',
-label='Slytherin')
+	fig = plt.figure()
+	plt.bar(lessons_graph, scores_graph)
 
-rects3 = plt.bar(index + bar_width * 2 - bar_width / 2, means_H, bar_width,
-alpha=opacity,
-color='y',
-label='Larves')
+	plt.tight_layout()
+	plt.show()
 
-rects4 = plt.bar(index + bar_width * 3 - bar_width / 2, means_R, bar_width,
-alpha=opacity,
-color='b',
-label='Ravenclaw')
+def		main():
+	lessons = ["Arithmancy", "Astronomy", "Herbology", "Defense Against the Dark Arts",
+	"Divination", "Muggle Studies", "Ancient Runes", "History of Magic", "Transfiguration",
+	"Potions", "Care of Magical Creatures", "Charms", "Flying"]
+	parser = argparse.ArgumentParser()
+	parser.add_argument("file", help="define our file", type = str)
+	parser.add_argument("-l", "--lesson", help="show the graph for the lesson", type = str)
+	args = parser.parse_args()
+	data = get_houses_dataset(args.file)
+	if args.lesson:
+		for lesson in lessons:
+			if args.lesson.lower() == lesson.lower():
+				lesson_graph(data, lesson)
+				return
+		print("Unknow lesson name")
+	else:
+		histogram_graph(data)
 
-plt.xlabel('notes (%)')
-plt.ylabel('student number (%)')
-plt.title('poudlard')
-plt.xticks(index + bar_width, ('0-25', '25-50', '50-75', '75-100'))
-plt.legend()
-
-plt.tight_layout()
-plt.show()
-
-
-# n, bins, patches = plt.hist([1, 2, 3, 4], [7, 8, 9], facecolor='red', alpha=0.5)
-# plt.show()
-# print(data["Hogwarts House"])
-
-# histogram(data)
+if __name__ == "__main__":
+    main()
