@@ -157,7 +157,7 @@ def		main():
 	"Divination", "Muggle Studies", "Ancient Runes", "History of Magic", "Transfiguration",
 	"Potions", "Care of Magical Creatures", "Charms", "Flying"]
 	parser = argparse.ArgumentParser()
-	parser.add_argument("file", help="define our file", type = str)
+	parser.add_argument("file", help="define your file", type = str)
 	parser.add_argument("-l", "--lesson", help="show the graph for the lesson", type = str)
 	args = parser.parse_args()
 	data = get_houses_dataset(args.file)
