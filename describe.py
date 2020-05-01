@@ -87,7 +87,7 @@ def get_dataset(file):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("file", help="define our file", type = str)
+    parser.add_argument("file", help="define your file", type = str)
     parser.add_argument("-a","--all", help="print all data", action="store_true")
     parser.add_argument("-save","--save", help="Save result in csv", type = str)
     parser.add_argument("-r","--row", help="Choose row to print", type = str)
