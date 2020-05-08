@@ -102,18 +102,25 @@ def found_feature(data, feature1, feature2):
         return(None, None)
     return (save_iter1, save_iter2)
 
-def sort_by_houses(color, size, house, data, feature1, feature2):
+def sort_by_houses(color, size, house, data, feature1, feature2, sort):
     data = data.dropna()
     mask = data["Hogwarts House"] == house
     data = data[mask]
     dict = {}
     for i in lessons :
-        dict[i] = data[i].sort_values()
+        if (sort):
+            dict[i] = data[i].sort_values()
+        else :
+            dict[i] = data[i]
     plt.scatter(dict[lessons[feature1]], dict[lessons[feature2]], c=color, s=size)
 
-def scatter_plot(file, feature1, feature2, size, house):
-    data = pd.read_csv(file)
+def scatter_plot(args):
+    data = pd.read_csv(args.file)
     data = data.dropna()
+    feature1 = args.feature1
+    feature2 = args.feature2
+    size = args.size
+    sort = args.sort
 
     save_iter1, save_iter2 = found_feature(data, feature1, feature2)
     if (save_iter1 is None):
@@ -121,11 +128,11 @@ def scatter_plot(file, feature1, feature2, size, house):
     plt.title('Similar feature')
     plt.xlabel(lessons[save_iter1])
     plt.ylabel(lessons[save_iter2])
-    if (house):
-        sort_by_houses("green", size, "Slytherin", data, save_iter1, save_iter2)
-        sort_by_houses("yellow", size, "Hufflepuff", data, save_iter1, save_iter2)
-        sort_by_houses("blue", size, "Ravenclaw", data, save_iter1, save_iter2)
-        sort_by_houses("red", size, "Gryffindor", data, save_iter1, save_iter2)
+    if (args.color):
+        sort_by_houses("green", size, "Slytherin", data, save_iter1, save_iter2, sort)
+        sort_by_houses("yellow", size, "Hufflepuff", data, save_iter1, save_iter2, sort)
+        sort_by_houses("blue", size, "Ravenclaw", data, save_iter1, save_iter2, sort)
+        sort_by_houses("red", size, "Gryffindor", data, save_iter1, save_iter2, sort)
         slyth = mpatches.Patch(color='green', label='Slytherin')
         huffle = mpatches.Patch(color='yellow', label='Hufflepuff')
         raven = mpatches.Patch(color='blue', label='Ravenclaw')
@@ -134,7 +141,10 @@ def scatter_plot(file, feature1, feature2, size, house):
     else :
         dict = {}
         for i in lessons :
-            dict[i] = data[i].sort_values()
+            if sort :
+                dict[i] = data[i].sort_values()
+            else :
+                dict[i] = data[i]
         plt.scatter(dict[lessons[save_iter1]], dict[lessons[save_iter2]], c="red", s=size)
     plt.savefig('scatter_plot.png')
     plt.show()
@@ -145,9 +155,10 @@ if __name__ == "__main__":
     parser.add_argument("-f1", "--feature1", help="define feature 1", type = str)
     parser.add_argument("-f2", "--feature2", help="define feature 2", type = str)
     parser.add_argument("-c","--color", help="plot by houses", action="store_true")
+    parser.add_argument("-S","--sort", help="ascendant sort", action="store_true")
     parser.add_argument("-s", "--size", help="scatter point size. Default = 0.1", type = float, default=0.1)
     args = parser.parse_args()
     if (args.size < 0 or args.size > 50):
         print("Invalid size")
         sys.exit()
-    scatter_plot(args.file, args.feature1, args.feature2, args.size, args.color)
+    scatter_plot(args)
