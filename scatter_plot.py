@@ -1,8 +1,12 @@
 from describe import get_dataset
 import argparse
 import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches
 import pandas as pd
 import sys
+import warnings
+
+# warnings.simplefilter("ignore")
 
 lessons = ["Arithmancy", "Astronomy", "Herbology", "Defense Against the Dark Arts",
     "Divination", "Muggle Studies", "Ancient Runes", "History of Magic", "Transfiguration",
@@ -53,10 +57,8 @@ def no_argument(dict):
         iteration1 +=1
     return(save_iter1, save_iter2)
 
-def scatter_plot(file, feature1, feature2, size):
-    data = pd.read_csv(file)
+def found_feature(data, feature1, feature2):
     dict = {}
-    data = data.dropna()
 
     for i in lessons :
         dict[i] = data[i].sort_values()
@@ -68,20 +70,27 @@ def scatter_plot(file, feature1, feature2, size):
             dict[i] = dict[i] / dict[i].max()
 
     iteration1, iteration2, len_max = -1, -1, len(lessons)
+    count1, count2 = 0, 0
     if (feature1):
-        count = 0
-        while count < len_max:
-            if (lessons[count].lower() == feature1.strip().lower()):
-                iteration1 = count
+        count1 = 0
+        while count1 < len_max:
+            if (lessons[count1].lower() == feature1.strip().lower()):
+                iteration1 = count1
                 break
-            count += 1
+            count1 += 1
+    if (count1 == len_max):
+        print("{} not found".format(feature1))
+        return(None, None)
     if (feature2):
-        count = 0
-        while count < len_max:
-            if (lessons[count].lower() == feature2.strip().lower()):
-                iteration2 = count
+        count2 = 0
+        while count2 < len_max:
+            if (lessons[count2].lower() == feature2.strip().lower()):
+                iteration2 = count2
                 break
-            count += 1
+            count2 += 1
+    if (count2 == len_max):
+        print("{} not found".format(feature2))
+        return(None, None)
     if (iteration1 == -1 and iteration2 == -1):
         save_iter1, save_iter2 = no_argument(dict)
     elif (iteration1 != -1 and iteration2 == -1):
@@ -90,12 +99,43 @@ def scatter_plot(file, feature1, feature2, size):
         save_iter1, save_iter2 = iteration1, iteration2
     else :
         print("Enter a feature 1 please")
-        return()
+        return(None, None)
+    return (save_iter1, save_iter2)
 
-    plt.scatter(dict[lessons[save_iter1]], dict[lessons[save_iter2]], c='red',s=size)
+def sort_by_houses(color, size, house, data, feature1, feature2):
+    data = data.dropna()
+    mask = data["Hogwarts House"] == house
+    data = data[mask]
+    dict = {}
+    for i in lessons :
+        dict[i] = data[i].sort_values()
+    plt.scatter(dict[lessons[feature1]], dict[lessons[feature2]], c=color, s=size)
+
+def scatter_plot(file, feature1, feature2, size, house):
+    data = pd.read_csv(file)
+    data = data.dropna()
+
+    save_iter1, save_iter2 = found_feature(data, feature1, feature2)
+    if (save_iter1 is None):
+        return()
     plt.title('Similar feature')
     plt.xlabel(lessons[save_iter1])
     plt.ylabel(lessons[save_iter2])
+    if (house):
+        sort_by_houses("green", size, "Slytherin", data, save_iter1, save_iter2)
+        sort_by_houses("yellow", size, "Hufflepuff", data, save_iter1, save_iter2)
+        sort_by_houses("blue", size, "Ravenclaw", data, save_iter1, save_iter2)
+        sort_by_houses("red", size, "Gryffindor", data, save_iter1, save_iter2)
+        slyth = mpatches.Patch(color='green', label='Slytherin')
+        huffle = mpatches.Patch(color='yellow', label='Hufflepuff')
+        raven = mpatches.Patch(color='blue', label='Ravenclaw')
+        gryff = mpatches.Patch(color='red', label='Gryffindor')
+        plt.legend(handles=[slyth, huffle, raven, gryff])
+    else :
+        dict = {}
+        for i in lessons :
+            dict[i] = data[i].sort_values()
+        plt.scatter(dict[lessons[save_iter1]], dict[lessons[save_iter2]], c="red", s=size)
     plt.savefig('scatter_plot.png')
     plt.show()
 
@@ -104,9 +144,10 @@ if __name__ == "__main__":
     parser.add_argument("file", help="define your file", type = str)
     parser.add_argument("-f1", "--feature1", help="define feature 1", type = str)
     parser.add_argument("-f2", "--feature2", help="define feature 2", type = str)
+    parser.add_argument("-c","--color", help="plot by houses", action="store_true")
     parser.add_argument("-s", "--size", help="scatter point size. Default = 0.1", type = float, default=0.1)
     args = parser.parse_args()
     if (args.size < 0 or args.size > 50):
         print("Invalid size")
         sys.exit()
-    scatter_plot(args.file, args.feature1, args.feature2, args.size)
+    scatter_plot(args.file, args.feature1, args.feature2, args.size, args.color)
