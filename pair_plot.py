@@ -21,7 +21,6 @@ def set_color_palette(column):
 			colors += ["#FFFF00"]
 		if g and s and r and h:
 			break
-	print(colors)
 	sns.set_palette(colors)
 
 
@@ -75,7 +74,7 @@ if __name__ == "__main__":
 		help()
 	if color:
 		set_color_palette(dataframe["Hogwarts House"])
-		g = sns.pairplot(dataframe, hue="Hogwarts House", vars=lessons)
+		g = sns.pairplot(dataframe, hue="Hogwarts House", vars=lessons, plot_kws={'alpha':0.3})
 		g._legend.remove()
 	else:
 		sns.pairplot(dataframe, vars=lessons)
