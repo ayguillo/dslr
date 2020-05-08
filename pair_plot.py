@@ -73,7 +73,6 @@ if __name__ == "__main__":
 	if columns < 2:
 		print("ERROR: pair plot need at least 2 features")
 		help()
-	print(dataframe)
 	if color:
 		set_color_palette(dataframe["Hogwarts House"])
 		g = sns.pairplot(dataframe, hue="Hogwarts House", vars=lessons)
