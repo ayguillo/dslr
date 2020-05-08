@@ -74,10 +74,10 @@ if __name__ == "__main__":
 		help()
 	if color:
 		set_color_palette(dataframe["Hogwarts House"])
-		g = sns.pairplot(dataframe, hue="Hogwarts House", vars=lessons, plot_kws={'alpha':0.3})
+		g = sns.pairplot(dataframe, hue="Hogwarts House", vars=lessons, plot_kws={'alpha':0.2})
 		g._legend.remove()
 	else:
-		sns.pairplot(dataframe, vars=lessons)
+		sns.pairplot(dataframe, vars=lessons, plot_kws={'alpha':0.3})
 	plt.tight_layout()
 	plt.show()
 	
