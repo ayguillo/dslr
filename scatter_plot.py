@@ -53,7 +53,7 @@ def no_argument(dict):
         iteration1 +=1
     return(save_iter1, save_iter2)
 
-def scatter_plot(file, feature1, feature2):
+def scatter_plot(file, feature1, feature2, size):
     data = pd.read_csv(file)
     dict = {}
     data = data.dropna()
@@ -92,7 +92,7 @@ def scatter_plot(file, feature1, feature2):
         print("Enter a feature 1 please")
         return()
 
-    plt.scatter(dict[lessons[save_iter1]], dict[lessons[save_iter2]], c='red',s=0.01)
+    plt.scatter(dict[lessons[save_iter1]], dict[lessons[save_iter2]], c='red',s=size)
     plt.title('Similar feature')
     plt.xlabel(lessons[save_iter1])
     plt.ylabel(lessons[save_iter2])
@@ -104,5 +104,9 @@ if __name__ == "__main__":
     parser.add_argument("file", help="define your file", type = str)
     parser.add_argument("-f1", "--feature1", help="define feature 1", type = str)
     parser.add_argument("-f2", "--feature2", help="define feature 2", type = str)
+    parser.add_argument("-s", "--size", help="scatter point size. Default = 0.1", type = float, default=0.1)
     args = parser.parse_args()
-    scatter_plot(args.file, args.feature1, args.feature2)
+    if (args.size < 0 or args.size > 50):
+        print("Invalid size")
+        sys.exit()
+    scatter_plot(args.file, args.feature1, args.feature2, args.size)
