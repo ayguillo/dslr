@@ -1,3 +1,5 @@
+from math import sqrt
+
 def		column_info(column):
 	count, mean, min = len(column), 0, float('inf')
 	for nb in column:
@@ -13,12 +15,12 @@ def		column_info(column):
 	std, max = 0, float('-inf')
 	for nb in column:
 		try :
-			std += abs(float(mean) - float(nb))
+			std += (float(nb) - float(mean))**2
 			if float(nb) > max:
 				max = float(nb)
 		except ValueError:
 			max, std = max, std
-	std /= count
+	std = sqrt(std / (count - 1))
 	return ([count, mean, std, min, (min + mean) / 2, mean, (mean + max) / 2, max])
 
 # info = column_info({1, 2, 3, 4})
