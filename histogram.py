@@ -160,6 +160,9 @@ def		main():
 	parser.add_argument("file", help="define your file", type = str)
 	parser.add_argument("-l", "--lesson", help="show the graph for the lesson", type = str)
 	args = parser.parse_args()
+	if not os.path.exists(args.file) or not os.path.isfile(args.file):
+		print("File error:", args.file)
+		sys.exit()
 	data = get_houses_dataset(args.file)
 	if args.lesson:
 		for lesson in lessons:

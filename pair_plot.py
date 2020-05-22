@@ -58,7 +58,9 @@ if __name__ == "__main__":
 	elif (sys.argv[1] == "-h"):
 		help()
 	sns.set(style="ticks", color_codes=True)
-	f = open(sys.argv[1], "r")
+	if not os.path.exists(sys.argv[1]) or not os.path.isfile(sys.argv[1]):
+		print("File error:", sys.argv[1])
+		sys.exit()
 	dataframe = pd.read_csv(f, delimiter=',')
 	if len(sys.argv) > 2:
 		if sys.argv[2] == "-c":

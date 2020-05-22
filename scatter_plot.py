@@ -160,6 +160,9 @@ if __name__ == "__main__":
 	parser.add_argument("-S","--sort", help="ascendant sort", action="store_true")
 	parser.add_argument("-s", "--size", help="scatter point size. Default = 0.1", type = float, default=0.1)
 	args = parser.parse_args()
+	if not os.path.exists(args.file) or not os.path.isfile(args.file):
+		print("File error:", args.file)
+		sys.exit()
 	if (args.size < 0 or args.size > 50):
 		print("Invalid size")
 		sys.exit()
