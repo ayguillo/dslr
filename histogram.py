@@ -118,7 +118,7 @@ def		lesson_graph(dataset, lesson):
 	rects3 = plt.bar(index + bar_width * 2 - bar_width / 2, means_H, bar_width,
 	alpha=opacity,
 	color='y',
-	label='Hufflepuffle')
+	label='Hufflepuff')
 
 	rects4 = plt.bar(index + bar_width * 3 - bar_width / 2, means_R, bar_width,
 	alpha=opacity,
@@ -171,4 +171,4 @@ def		main():
 		histogram_graph(data)
 
 if __name__ == "__main__":
-    main()
+	main()
