@@ -14,7 +14,7 @@ class regression:
 		return (1 / (1 + np.exp(-z)))
 
 	def predict(self):
-		return(sigmoid(self.X @ self.theta))
+		return(sigmoid(np.dot(self.X, self.theta)))
 
 	def cost(self):
 		m = len(self.y)

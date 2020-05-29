@@ -5,16 +5,21 @@ import argparse
 import pandas as pd
 import os
 import sys
+from normalize import normalize_numpy
+# from reg_fit import regression
 
-def sigmoid(x):
-    return 1 / (1 + np.exp(-x))
+def get_notes(data):
+	new_df = data[["Astronomy", "Ancient Runes"]].copy()
+	return normalize_numpy(new_df.to_numpy())
 
-def compute_cost(X, y, theta):
-    m = len(y)
-    h = sigmoid(X @ theta)
-    epsilon = 1e-5
-    cost = (1/m)*(((-y).T @ np.log(h + epsilon))-((1-y).T @ np.log(1-h + epsilon)))
-    return cost
+def get_houses(data):
+	new_df = data["Hogwarts House"].replace(
+		["Gryffindor", "Slytherin", "Ravenclaw", "Hufflepuff"],
+		[1, 2, 3, 4])
+	return new_df.to_numpy()[:,np.newaxis]
+
+def compute(data):
+	x = regression(get_notes(data), get_houses(data), 0.1, 100)
 
 if __name__ == "__main__":
 	parser = argparse.ArgumentParser()
@@ -24,3 +29,7 @@ if __name__ == "__main__":
 		print("File error:", args.file)
 		sys.exit()
 	data = pd.read_csv(args.file)
+	if "Hogwarts House" not in data.columns or "Ancient Runes" not in data.columns or "Astronomy" not in data.columns:
+		print('Need columns: "Hogwarts House", "Ancient Runes", "Astronomy"')
+	else:
+		compute(data)
