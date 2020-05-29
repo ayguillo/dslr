@@ -10,7 +10,11 @@ from normalize import normalize_numpy
 
 def get_notes(data):
 	new_df = data[["Astronomy", "Ancient Runes"]].copy()
-	return normalize_numpy(new_df.to_numpy())
+	new_df = normalize_numpy(new_df.to_numpy())
+	# print()
+	new_df = np.hstack((np.ones((10,1)), new_df))
+	print(new_df)
+	return new_df
 
 def get_houses(data):
 	new_df = data["Hogwarts House"].replace(
@@ -19,7 +23,8 @@ def get_houses(data):
 	return new_df.to_numpy()[:,np.newaxis]
 
 def compute(data):
-	x = regression(get_notes(data), get_houses(data), 0.1, 100)
+	get_notes(data)
+	# x = regression(get_notes(data), get_houses(data), 0.1, 100)
 
 if __name__ == "__main__":
 	parser = argparse.ArgumentParser()
