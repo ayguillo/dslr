@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -64,7 +66,8 @@ def compute(data, visualise):
 		houses_theta += tmp_theta
 		plot.append(tmp_cost)
 	save_theta(houses_theta)
-	plot_graph_cost(plot)
+	if visualise == True:
+		plot_graph_cost(plot)
 
 if __name__ == "__main__":
 	parser = argparse.ArgumentParser()
