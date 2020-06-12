@@ -11,8 +11,8 @@ from reg_fit import regression
 def get_notes(data):
 	new_df = data[["Astronomy", "Ancient Runes"]].copy()
 	new_df = normalize_numpy(new_df.to_numpy())
-	# print(new_df)
-	new_df = np.hstack((np.ones((10,1)), new_df))
+	# print(len(new_df))
+	new_df = np.hstack((np.ones((len(new_df),1)), new_df))
 	# print(new_df)
 	return new_df
 
