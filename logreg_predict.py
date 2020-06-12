@@ -5,7 +5,7 @@ import argparse
 import pandas as pd
 import os
 import sys
-from normalize import normalize_numpy
+from src.normalize import normalize_numpy
 
 def predict_this_stud(notes, thetas):
 	house = 0

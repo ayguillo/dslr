@@ -8,8 +8,8 @@ import pandas as pd
 import csv
 import os
 import sys
-from normalize import normalize_numpy
-from reg_fit import regression
+from src.normalize import normalize_numpy
+from src.reg_fit import regression
 
 def plot_graph_cost(plot):
 	max_iter = 0
