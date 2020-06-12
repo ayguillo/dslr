@@ -1,13 +1,12 @@
-from describe import get_dataset
-from pair_plot import new_lessons_list, set_color_palette
+#!/usr/bin/python3
+
+from src.describe import get_dataset
+from src.pair_plot import new_lessons_list, set_color_palette
 import argparse
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 import pandas as pd
 import sys
-import warnings
-
-# warnings.simplefilter("ignore")
 
 lessons = ["Arithmancy", "Astronomy", "Herbology", "Defense Against the Dark Arts",
 	"Divination", "Muggle Studies", "Ancient Runes", "History of Magic", "Transfiguration",

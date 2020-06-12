@@ -1,6 +1,8 @@
+#!/usr/bin/python3
+
 import sys
 import csv
-from column_info import column_info
+from src.column_info import column_info
 import matplotlib.pyplot as plt
 import numpy as np
 import argparse

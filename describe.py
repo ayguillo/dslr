@@ -1,6 +1,7 @@
+#!/usr/bin/python3
+
 import csv
-import sys
-from column_info import column_info
+from src.column_info import column_info
 import os
 import pandas as pd
 import argparse

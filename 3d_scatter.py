@@ -1,8 +1,9 @@
+#!/usr/bin/python3
+
 from pair_plot import new_lessons_list
 import plotly.graph_objects as go
 import plotly.express as px
 import pandas as pd
-import numpy as np
 import argparse
 import sys
 import os
