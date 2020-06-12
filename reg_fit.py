@@ -29,9 +29,9 @@ class regression:
 			self.theta = self.theta - (self.learning_rate / m) * (np.dot(self.X.T, self.sigmoid((self.X @ self.theta)) - self.y))
 			cost = self.cost()
 			# print(cost)
-			if cost[0][0] > 0.1:
+			if cost[0][0] >= 0.05:
 				cost_history.append(cost[0][0])
 			else :
-				print("fin", i)
+				cost_history.append(cost[0][0])
 				break
 		return(cost_history)
