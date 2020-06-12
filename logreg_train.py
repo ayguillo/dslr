@@ -9,6 +9,26 @@ import sys
 from normalize import normalize_numpy
 from reg_fit import regression
 
+def plot_graph_cost(plot):
+	max_iter = 0
+	for i in range(len(plot)):
+		if (len(plot[i]) > max_iter):
+			max_iter = len(plot[i])
+	for i in range(len(plot)):
+		while (len(plot[i]) < max_iter):
+			plot[i].append(plot[i][-1])
+		if i == 0:
+			color = 'r'
+		if i == 1:
+			color = 'g'
+		if i == 2:
+			color = 'b'
+		if i == 3:
+			color = 'y'
+		plt.plot(range(max_iter), plot[i], color=color)
+	plt.legend(['Gryffindor', 'Slytherin', 'Ravenclaw', 'Hufflepuff'])
+	plt.title("Cost function")
+	plt.show()
 
 def save_theta(thetas):
 	with open(".save_model.csv", 'w', newline='') as csvfile:
@@ -29,39 +49,33 @@ def get_notes_houses(data):
 	houses = houses.to_numpy()[:,np.newaxis]
 	return (notes, houses)
 
-def single_house_regression(notes, houses, house_number):
+def single_house_regression(notes, houses, house_number, visualise):
 	binary_houses = np.where(houses!=house_number, 0, houses)
 	binary_houses = np.where(binary_houses==house_number, 1, binary_houses)
-	# print(binary_houses)
-	# return ("hello")
 	x = regression(notes, binary_houses, np.zeros((4, 1)), 5, 7000)
-	x.gradient_descent()
-	# print(x.theta)
-	return(x.theta.T.tolist())
+	cost_history = x.gradient_descent()
+	return(x.theta.T.tolist(), cost_history)
 
-def compute(data):
+def compute(data, visualise):
 	notes, houses = get_notes_houses(data)
-	houses_theta = []
-	# for small test, uncomment the 3 next lines <---------------------------------------------------------------------TESTS HERE
-	# houses_theta = [[0], [0], [0], single_house_regression(notes, houses, 2)]
-	# save_theta(houses_theta)
-	# return
-
-	print(notes)
+	houses_theta, plot = [], []
 	for i in range (1, 5):
-		houses_theta += single_house_regression(notes, houses, i)
+		tmp_theta, tmp_cost = single_house_regression(notes, houses, i, visualise)
+		houses_theta += tmp_theta
+		plot.append(tmp_cost)
 	save_theta(houses_theta)
-	
+	plot_graph_cost(plot)
 
 if __name__ == "__main__":
 	parser = argparse.ArgumentParser()
 	parser.add_argument("file", help="define your file", type = str)
+	parser.add_argument("-v","--visualise",help="define create files cost.png that represent the cost training result", action="store_true")
 	args = parser.parse_args()
 	if not os.path.exists(args.file) or not os.path.isfile(args.file):
 		print("File error:", args.file)
 		sys.exit()
 	data = pd.read_csv(args.file)
-	if "Hogwarts House" not in data.columns or "Ancient Runes" not in data.columns or "Astronomy" not in data.columns:
-		print('Need columns: "Hogwarts House", "Ancient Runes", "Astronomy"')
+	if "Hogwarts House" not in data.columns or "Ancient Runes" not in data.columns or "Astronomy" not in data.columns or "Herbology" not in data.columns:
+		print('Need columns: "Hogwarts House", "Ancient Runes", "Astronomy", "Herbology"')
 	else:
-		compute(data)
+		compute(data, args.visualise)

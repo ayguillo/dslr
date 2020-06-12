@@ -1,4 +1,5 @@
 import numpy as np
+import time
 
 class regression:
 
@@ -8,13 +9,9 @@ class regression:
 		self.theta = theta
 		self.learning_rate = learning_rate
 		self.iterations = iterations
-	 
 
 	def sigmoid(self, z):
 		return (1 / (1 + np.exp(-z)))
-
-	def predict(self):
-		return(sigmoid(np.dot(self.X, self.theta)))
 
 	def cost(self):
 		m = len(self.y)
@@ -26,12 +23,17 @@ class regression:
 		m = len(self.y)
 		cost_history = []
 		for i in range(self.iterations):
-			self.theta = self.theta - (self.learning_rate / m) * (np.dot(self.X.T, self.sigmoid((self.X @ self.theta)) - self.y))
-			cost = self.cost()
-			# print(cost)
-			if cost[0][0] >= 0.05:
-				cost_history.append(cost[0][0])
-			else :
-				cost_history.append(cost[0][0])
+			self.theta -= (self.learning_rate / m) * (np.dot(self.X.T, self.sigmoid((self.X @ self.theta)) - self.y))
+			cost = self.cost()[0][0]
+			if (len(cost_history) > 0):
+				delta = cost_history[-1] - cost
+				if ((delta < 0.000001 and self.learning_rate > 0.0001 and cost < cost_history[-1]) or cost > cost_history[-1]):
+					self.learning_rate /= 2
+				if (delta < 1e-10):
+					cost_history.append(cost)
+					break
+			cost_history.append(cost)
+			if cost < 0.02:
+				cost_history.append(cost)
 				break
 		return(cost_history)
