@@ -6,14 +6,14 @@ import pandas as pd
 import os
 import sys
 from normalize import normalize_numpy
-# from reg_fit import regression
+from reg_fit import regression
 
 def get_notes(data):
 	new_df = data[["Astronomy", "Ancient Runes"]].copy()
 	new_df = normalize_numpy(new_df.to_numpy())
-	# print()
+	# print(new_df)
 	new_df = np.hstack((np.ones((10,1)), new_df))
-	print(new_df)
+	# print(new_df)
 	return new_df
 
 def get_houses(data):
@@ -23,8 +23,13 @@ def get_houses(data):
 	return new_df.to_numpy()[:,np.newaxis]
 
 def compute(data):
-	get_notes(data)
-	# x = regression(get_notes(data), get_houses(data), 0.1, 100)
+	# a = get_notes(data)
+	# print(get_houses(data))
+	# print(np.zeros((3, 1)))
+	x = regression(get_notes(data), get_houses(data), np.zeros((3, 1)), 0.1, 100)
+	print(x.gradient_descent())
+	print(x.theta)
+	
 
 if __name__ == "__main__":
 	parser = argparse.ArgumentParser()
