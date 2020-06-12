@@ -10,7 +10,7 @@ class regression:
 		self.iterations = iterations
 	 
 
-	def sigmoid(z):
+	def sigmoid(self, z):
 		return (1 / (1 + np.exp(-z)))
 
 	def predict(self):
@@ -19,7 +19,7 @@ class regression:
 	def cost(self):
 		m = len(self.y)
 		y = self.y.T
-		h = sigmoid(np.dot(self.theta.T, self.X))
+		h = self.sigmoid(np.dot(self.X, self.theta))
 		cost = (1 / m) * ((np.dot(y, np.log(h))) + np.dot((1 - y), np.log(1-h)))
 		return (cost)
 
@@ -27,6 +27,6 @@ class regression:
 		m = len(self.y)
 		cost_history = np.zeros((self.iterations, 1))
 		for i in range(self.iterations):
-			self.theta = self.theta - (self.learning_rate / m) * (np.dot(self.X.T), sigmoid(np.dot(self.X,self.theta)) - self.y[])
-			cost_history[i] = cost(self.X, self.y, self.theta)
+			self.theta = self.theta - (self.learning_rate / m) * (np.dot(self.X.T, self.sigmoid((self.X @ self.theta)) - self.y))
+			cost_history[i] = self.cost()
 		return(cost_history, self.theta)
