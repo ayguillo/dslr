@@ -62,4 +62,7 @@ if __name__ == "__main__":
 	if "Ancient Runes" not in data.columns or "Astronomy" not in data.columns or "Herbology" not in data.columns:
 		print('Need columns: "Ancient Runes", "Astronomy", "Herbology"')
 	else:
-		compute(data)
+		try:
+			compute(data)
+		except:
+			print("Compute error")
