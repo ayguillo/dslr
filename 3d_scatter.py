@@ -10,6 +10,7 @@ import os
 
 def color_tab(column):
 	colors = []
+	# print(column)
 	for house in column:
 		if house == "Gryffindor":
 			colors += ["rgb(255, 0, 0)"]
@@ -22,14 +23,17 @@ def color_tab(column):
 	return colors
 
 def scatter_plot_3d(args):
-	data = pd.read_csv(args.file)
-	data = data.dropna()
+	try:
+		data = pd.read_csv(args.file)
+	except pd.errors.EmptyDataError:
+		print("Empty file")
+		sys.exit(-1)
 	lessons = new_lessons_list([args.featureX, args.featureY, args.featureZ],
 		["Arithmancy", "Astronomy", "Herbology", "Defense Against the Dark Arts",
 		"Divination", "Muggle Studies", "Ancient Runes", "History of Magic", "Transfiguration",
 		"Potions", "Care of Magical Creatures", "Charms", "Flying"])
 	if (len(lessons) < 3):
-		return()
+		return
 	fig = go.Figure(data=[go.Scatter3d(
 		   x=data[lessons[0]],
 		   y=data[lessons[1]],

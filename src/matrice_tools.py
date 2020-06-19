@@ -32,16 +32,3 @@ def product_by_nb(matrice, nb):
 		for column in range(matrice_column_nb):
 			matrice[line][column] = matrice[line][column] * nb
 	return matrice
-
-# A = np.array([[1,2,5],[3,4,6]])
-# print(A)
-# # print(transposition(A))
-# # print(A.T)
-# # print()
-# B = np.array([[9,8], [7,6], [5,4]])
-# print(B)
-# print(product(A, B))
-# print(A @ B)
-# # print(B)
-# print(transposition(B))
-# print(B.T)

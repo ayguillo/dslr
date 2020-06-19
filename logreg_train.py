@@ -76,7 +76,11 @@ if __name__ == "__main__":
 	if not os.path.exists(args.file) or not os.path.isfile(args.file):
 		print("File error:", args.file)
 		sys.exit()
-	data = pd.read_csv(args.file)
+	try:
+		data = pd.read_csv(args.file)
+	except pd.errors.EmptyDataError:
+		print("Empty file")
+		sys.exit(-1)
 	if "Hogwarts House" not in data.columns or "Ancient Runes" not in data.columns or "Astronomy" not in data.columns or "Herbology" not in data.columns:
 		print('Need columns: "Hogwarts House", "Ancient Runes", "Astronomy", "Herbology"')
 	else:

@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import sys
+import os
 import csv
 from src.column_info import column_info
 import matplotlib.pyplot as plt
@@ -62,6 +63,9 @@ def		quart_diff(general_info, house_notes):
 				quarts[3] += 1
 		except ValueError :
 			count -= 1
+	if count < 1:
+		print("Not enough data")
+		sys.exit(-1)
 	quarts[0] /= count
 	quarts[1] /= count
 	quarts[2] /= count
@@ -70,6 +74,9 @@ def		quart_diff(general_info, house_notes):
 
 def		difference(datasets, lesson):
 	lesson_row = 0
+	if "Hogwarts House" not in datasets:
+		print("No column 'Hogwarts House'")
+		sys.exit(-1)
 	for row in datasets["Hogwarts House"]:
 		# print(row[0])
 		if row[0] == lesson:
@@ -77,11 +84,14 @@ def		difference(datasets, lesson):
 		lesson_row += 1
 	global_info = column_info(datasets["Hogwarts House"][lesson_row])
 	quarts = []
-	quarts.append(quart_diff(global_info, datasets["Gryffindor"][lesson_row]))
-	# print(G_quart)
-	quarts.append(quart_diff(global_info, datasets["Slytherin"][lesson_row]))
-	quarts.append(quart_diff(global_info, datasets["Hufflepuff"][lesson_row]))
-	quarts.append(quart_diff(global_info, datasets["Ravenclaw"][lesson_row]))
+	try:
+		quarts.append(quart_diff(global_info, datasets["Gryffindor"][lesson_row]))
+		quarts.append(quart_diff(global_info, datasets["Slytherin"][lesson_row]))
+		quarts.append(quart_diff(global_info, datasets["Hufflepuff"][lesson_row]))
+		quarts.append(quart_diff(global_info, datasets["Ravenclaw"][lesson_row]))
+	except KeyError as t:
+		print("Missing house:", t)
+		sys.exit(-1)
 	mean_quart = [(quarts[0][0] + quarts[1][0] + quarts[2][0] + quarts[3][0]) / 4,
 				(quarts[0][1] + quarts[1][1] + quarts[2][1] + quarts[3][1]) / 4,
 				(quarts[0][2] + quarts[1][2] + quarts[2][2] + quarts[3][2]) / 4,

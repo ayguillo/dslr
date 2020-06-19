@@ -31,6 +31,9 @@ def predict_this_stud(notes, thetas):
 
 def compute(data):
 	notes = normalize_numpy(data[["Astronomy", "Ancient Runes", "Herbology"]].copy().to_numpy())
+	if len(notes) < 1:
+		print("Not enough data")
+		return
 	notes[np.isnan(notes)] = 0.5
 	thetas = pd.read_csv(".save_model.csv", delimiter=',').to_numpy()
 	res = "Index,Hogwarts House"
@@ -48,7 +51,14 @@ if __name__ == "__main__":
 	if not os.path.exists(args.file) or not os.path.isfile(args.file):
 		print("File error:", args.file)
 		sys.exit()
-	data = pd.read_csv(args.file)
+	if not os.path.exists(".save_model.csv") or not os.path.isfile(".save_model.csv"):
+		print("File error: no '.save_model.csv' found")
+		sys.exit()
+	try:
+		data = pd.read_csv(args.file)
+	except pd.errors.EmptyDataError:
+		print("Empty file")
+		sys.exit(-1)
 	if "Ancient Runes" not in data.columns or "Astronomy" not in data.columns or "Herbology" not in data.columns:
 		print('Need columns: "Ancient Runes", "Astronomy", "Herbology"')
 	else:

@@ -1,5 +1,6 @@
 import numpy as np
 import time
+import sys
 
 class regression:
 
@@ -21,6 +22,9 @@ class regression:
 
 	def gradient_descent(self):
 		m = len(self.y)
+		if m < 1:
+			print("Not enough data")
+			sys.exit(-1)
 		cost_history = []
 		for i in range(self.iterations):
 			self.theta -= (self.learning_rate / m) * (np.dot(self.X.T, self.sigmoid((self.X @ self.theta)) - self.y))

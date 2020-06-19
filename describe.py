@@ -5,6 +5,7 @@ from src.column_info import column_info
 import os
 import pandas as pd
 import argparse
+import sys
 
 def args_is_r(df, args, all=True):
 	row = []
@@ -46,6 +47,9 @@ def describe(data, args):
 	tab_feature, tab_res, count_line, n_feature = [], [], 0, 0
 	index = ['count', 'mean', 'std', 'min', '25%', '50%', '75%', 'max']
 	len_i = len(index)
+	if len(data) < 1 or len(data[0]) < 2:
+		print("Not enough data")
+		return None
 	for line in data :
 		if (is_number(line[1])):
 			tab_res.append(column_info(data[count_line][1:]))
@@ -86,16 +90,15 @@ def get_dataset(file):
 	f.close()
 	return (dataset)
 
-def main():
+if __name__ == "__main__":
 	parser = argparse.ArgumentParser()
 	parser.add_argument("file", help="define your file", type = str)
 	parser.add_argument("-a","--all", help="print all data", action="store_true")
-	parser.add_argument("-save","--save", help="Save result in csv", type = str)
+	parser.add_argument("-s","--save", help="Save result in csv", type = str)
 	parser.add_argument("-r","--row", help="Choose row to print", type = str)
 	args = parser.parse_args()
+	if not os.path.exists(args.file) or not os.path.isfile(args.file):
+		print("File error:", args.file)
+		sys.exit()
 	data = get_dataset(args.file)
 	describe(data, args)
-	print(pd.read_csv(args.file).describe())
-
-if __name__ == "__main__":
-	main()

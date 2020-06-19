@@ -3,8 +3,11 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+import os
 import sys
+import warnings
 
+warnings.simplefilter("ignore", UserWarning)
 def set_color_palette(column):
 	g, s, r, h = 0, 0, 0, 0
 	colors = []
@@ -23,6 +26,8 @@ def set_color_palette(column):
 			colors += ["#FFFF00"]
 		if g and s and r and h:
 			break
+	while len(colors) < 4:
+		colors += ["#000000"]
 	sns.set_palette(colors)
 
 
@@ -62,8 +67,12 @@ if __name__ == "__main__":
 	sns.set(style="ticks", color_codes=True)
 	if not os.path.exists(sys.argv[1]) or not os.path.isfile(sys.argv[1]):
 		print("File error:", sys.argv[1])
-		sys.exit()
-	dataframe = pd.read_csv(f, delimiter=',')
+		sys.exit(-1)
+	try:
+		dataframe = pd.read_csv(sys.argv[1], delimiter=',')
+	except pd.errors.EmptyDataError:
+		print("Empty file")
+		sys.exit(-1)
 	if len(sys.argv) > 2:
 		if sys.argv[2] == "-c":
 			color = 1

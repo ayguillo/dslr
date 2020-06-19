@@ -1,12 +1,13 @@
 #!/usr/bin/python3
 
-from src.describe import get_dataset
-from src.pair_plot import new_lessons_list, set_color_palette
+from describe import get_dataset
+from pair_plot import new_lessons_list, set_color_palette
 import argparse
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 import pandas as pd
 import sys
+import os
 
 lessons = ["Arithmancy", "Astronomy", "Herbology", "Defense Against the Dark Arts",
 	"Divination", "Muggle Studies", "Ancient Runes", "History of Magic", "Transfiguration",
@@ -20,12 +21,18 @@ def least_square(array1, array2):
 		y += array2.iloc[i]
 		x_square += array1.iloc[i] ** 2
 		xy += array1.iloc[i] * array2.iloc[i]
+	if student_nb < 1:
+		print("Not enough data")
+		sys.exit(-1)
 	x /= student_nb
 	y /= student_nb
 	xy /= student_nb
 	x_square /= student_nb
 
 	t1 = abs(xy) - (abs(x) * abs(y))
+	if abs(x_square) - (abs(x) ** 2) == 0:
+		print("Data error")
+		sys.exit(-1)
 	t1 /= abs(x_square) - (abs(x) ** 2)
 	t0 = abs(y) - t1 * abs(x)
 	return (t0, t1)
@@ -115,7 +122,11 @@ def sort_by_houses(color, size, house, data, feature1, feature2, sort):
 	plt.scatter(dict[lessons[feature1]], dict[lessons[feature2]], c=color, s=size)
 
 def scatter_plot(args):
-	data = pd.read_csv(args.file)
+	try:
+		data = pd.read_csv(args.file)
+	except pd.errors.EmptyDataError:
+		print("Empty file")
+		sys.exit(-1)
 	data = data.dropna()
 	feature1 = args.feature1
 	feature2 = args.feature2
